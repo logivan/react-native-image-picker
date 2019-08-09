@@ -337,6 +337,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
       requestCode = REQUEST_LAUNCH_IMAGE_LIBRARY;
       libraryIntent = new Intent(Intent.ACTION_PICK,
       MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+      libraryIntent.setType("image/*");
     }
 
     if (libraryIntent.resolveActivity(reactContext.getPackageManager()) == null)
@@ -452,6 +453,12 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
     else
     {
       imageConfig = getResizedImage(reactContext, this.options, imageConfig, initialWidth, initialHeight, requestCode);
+
+      if (imageConfig == null) {
+         responseHelper.invokeError(callback, "Video is not supported in image mode");
+         return;
+      }
+
       if (imageConfig.resized == null)
       {
         removeUselessFiles(requestCode, imageConfig);
